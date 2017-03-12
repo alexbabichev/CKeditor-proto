@@ -1,0 +1,19 @@
+<h1>
+  {{title}}
+</h1>
+<hr>
+<nav>
+  <a routerLink="" routerLinkActive="active">Crisis Center</a>
+  <a routerLink="/auth" routerLinkActive="active">Heroes</a>
+</nav>
+<hr>
+<router-outlet></router-outlet>
+<button (click)="onClickMe()">Login</button>
+<hr>
+
+<!--<app-button1 [c]="editor1"></app-button1>-->
+<cke-base-button [cke]="editor1"></cke-base-button>
+<cke-custom-button [cke]="editor1"></cke-custom-button>
+
+
+<ckeditor [(ngModel)]="ckeditorContent" [config]="conf" #editor1></ckeditor>
