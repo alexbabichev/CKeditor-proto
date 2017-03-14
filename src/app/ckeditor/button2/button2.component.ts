@@ -12,9 +12,9 @@ export class Button2Component extends BaseButtonComponent {
 
   private name: string = 'newwidget';
 
-  private now = new Date();
+  private now: Date = new Date();
 
-  private template = `<span>The current date and time is: <em>${this.now}</em></span>`;
+  private template: string = `<span>The current date and time is: <em>${this.now}</em></span>`;
 
   constructor() {
     super();

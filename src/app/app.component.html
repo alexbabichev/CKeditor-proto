@@ -11,9 +11,12 @@
 <button (click)="onClickMe()">Login</button>
 <hr>
 
-<!--<app-button1 [c]="editor1"></app-button1>-->
-<cke-base-button [cke]="editor1"></cke-base-button>
-<cke-custom-button [cke]="editor1"></cke-custom-button>
+<div class="cke-toolbar">
+  <cke-tools [cke]="editor1"></cke-tools>
+  <cke-base-button [cke]="editor1"></cke-base-button>
+  <cke-custom-button [cke]="editor1"></cke-custom-button>
+</div>
+
 
 
 <ckeditor [(ngModel)]="ckeditorContent" [config]="conf" #editor1></ckeditor>

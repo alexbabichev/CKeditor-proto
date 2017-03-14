@@ -15,7 +15,7 @@ export class AppComponent {
 
   ckeditorContent = 'ckeditor <b>content</b>';
   conf = {
-    removePlugins: 'toolbar',
+    // removePlugins: 'toolbar',
     extraPlugins: 'widget'
   };
 

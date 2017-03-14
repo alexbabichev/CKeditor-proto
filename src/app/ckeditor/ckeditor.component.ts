@@ -134,22 +134,7 @@ export class CKEditorComponent implements AfterViewInit {
         this.focus.emit(evt);
       });
 
-      // Add Toolbar Groups to Editor. This will also add Buttons within groups.
-      // this.toolbarGroups.forEach((group)=>{
-      //   group.initialize(this)
-      // });
-      // // Add Toolbar Buttons to Editor.
-      // this.toolbarButtons.forEach((button) => {
-      //   button.initialize(this);
-      // });
   }
-
-  
-
-  public test(){
-    console.log('object');
-  }
-
 
   /**
    * Implements ControlValueAccessor

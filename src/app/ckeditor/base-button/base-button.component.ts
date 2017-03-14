@@ -19,7 +19,8 @@ declare var CKEDITOR: any;
 })
 export class BaseButtonComponent implements AfterContentInit {
 
-  @Input() cke;
+  @Input()
+  cke: any;
 
   widget = new Widget();
 
