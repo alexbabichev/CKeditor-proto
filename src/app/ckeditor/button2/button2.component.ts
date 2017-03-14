@@ -20,7 +20,7 @@ export class Button2Component extends BaseButtonComponent {
     super();
     this.widget.name = this.name;
     this.widget.template = this.template;
-    this.widget.init = () => {
+    this.widget.edit = () => {
       // here will be modal window
       window.alert(this.now);
     };

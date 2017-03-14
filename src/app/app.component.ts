@@ -14,13 +14,7 @@ export class AppComponent {
   title = 'app works!';
 
   ckeditorContent = 'ckeditor <b>content</b>';
-  conf = {
-    removePlugins: 'toolbar',
-    extraPlugins: 'widget'
-  };
-
-
-
+  
   constructor(private authService: AuthService, private router: Router) { };
 
   onClickMe = function () {

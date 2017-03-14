@@ -29,8 +29,17 @@ declare var CKEDITOR: any;
 })
 export class CKEditorComponent implements AfterViewInit {
 
-  @Input() config;
-  @Input() debounce;
+  @Input()
+  set value(v: string) {
+    if (v !== this._value) {
+      this._value = v;
+      this.onChange(v);
+    }
+  }
+
+  get value(): string {
+    return this._value;
+  };
 
   @Output() change = new EventEmitter();
   @Output() ready = new EventEmitter();
@@ -38,41 +47,33 @@ export class CKEditorComponent implements AfterViewInit {
   @Output() focus = new EventEmitter();
   @ViewChild('host') host;
 
-  @Output() test1 = new EventEmitter();
+  private config: any = {
+    removePlugins: 'elementspath',
+    extraPlugins: 'widget',
+    resize_enabled: false,
+    toolbar: [
+      { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
+      { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] }
+    ]
+  }
 
+  private _value: string = '';
+  private instance: any;
+  private zone: NgZone;
 
-  _value = '';
-  instance;
-  debounceTimeout;
-  zone;
-
-  constructor(zone:NgZone) {
+  constructor(zone: NgZone) {
     this.zone = zone;
   }
 
-  get value(): any { return this._value; };
-  @Input() set value(v) {
-    if (v !== this._value) {
-      this._value = v;
-      //this.onChange(v);
-    }
-  }
 
-  /**
-   * On component view init
-   */
   ngAfterViewInit() {
-    // Configuration
-    this.ckeditorInit(this.config || {});
-
+    this.ckeditorInit(this.config);
   }
 
-  updateValue(value) {
+  updateValue(value: string) {
     this.zone.run(() => {
       this.value = value;
-
       this.onChange(value);
-
       this.onTouched();
       this.change.emit(value);
     });
@@ -82,71 +83,43 @@ export class CKEditorComponent implements AfterViewInit {
    * CKEditor init
    */
 
-  ckeditorInit(config) {
-    if (typeof CKEDITOR == 'undefined') 
+  ckeditorInit(config: any): void {
+    if (typeof CKEDITOR == 'undefined') {
       console.warn('CKEditor 4.x is missing (http://ckeditor.com/)');
+    }
 
-      // config.extraPlugins = 'widget';
+    this.instance = CKEDITOR.replace(this.host.nativeElement, config);
 
-      console.log(config);
+    this.instance.on('instanceReady', (evt: any) => {
+      this.ready.emit(evt);
+    });
 
-      CKEDITOR.addCss(
-          '#widget:hover {' +
-            'outline: 1px dotted red;' +
-            'cursor: pointer' +
-          '}'
-        );
+    this.instance.on('change', () => {
+      let value = this.instance.getData();
+      this.onTouched();
+      this.updateValue(value);
+    });
 
-      this.instance = CKEDITOR.replace(this.host.nativeElement, config);
-      
-    // listen for instanceReady event
-      this.instance.on('instanceReady', (evt) => {
-        // send the evt to the EventEmitter
-        this.ready.emit(evt);
-      });
+    this.instance.on('blur', (evt: any) => {
+      this.blur.emit(evt);
+    });
 
-      // CKEditor change event
-      this.instance.on('change', () => {
-        this.onTouched();
-        let value = this.instance.getData();
-
-        // Debounce update
-        if (this.debounce) {
-          if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
-          this.debounceTimeout = setTimeout(() => {
-            this.updateValue(value);
-            this.debounceTimeout = null;
-          }, parseInt(this.debounce));
-
-          // Live update
-        }else {
-          this.updateValue(value);
-        }
-      });
-
-      // CKEditor blur event
-      this.instance.on('blur', (evt) => {
-        this.blur.emit(evt);
-      });
-
-      // CKEditor focus event
-      this.instance.on('focus', (evt) => {
-        this.focus.emit(evt);
-      });
+    this.instance.on('focus', (evt: any) => {
+      this.focus.emit(evt);
+    });
 
   }
 
   /**
    * Implements ControlValueAccessor
    */
-  writeValue(value) {
+  writeValue(value: string) {
     this._value = value;
     if (this.instance)
       this.instance.setData(value);
   }
-  onChange(_) {}
-  onTouched() {}
+  onChange(_) { }
+  onTouched() { }
   registerOnChange(fn) { this.onChange = fn; }
   registerOnTouched(fn) { this.onTouched = fn; }
-
 }

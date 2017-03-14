@@ -1,3 +1,25 @@
-<button (click)="click('bold')">Bold</button>
-<button (click)="click('italic')">Italic</button>
-<button (click)="click('underline')">Underline</button>
+<span *ngFor="let button of buttons">
+    <span class="cke-btn cke-btn__{{button.id}}" (click)="click(button.id)" [ngClass]="{'active': button.active}">
+        {{button.id}}
+    </span>
+</span>
+
+<!--list,
+header-->
+
+<style>
+    .cke-btn {
+        display: inline-block;
+        height: 35px;
+        width: 100px;
+        line-height: 35px;
+        vertical-align: middle;
+        text-align: center;
+        cursor: pointer;
+        outline: 1px solid silver;
+    }
+    .cke-btn.active {
+        font-weight: bold;
+    }
+</style>
+
