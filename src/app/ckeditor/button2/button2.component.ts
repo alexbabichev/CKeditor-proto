@@ -10,21 +10,19 @@ declare var window: any;
 })
 export class Button2Component extends BaseButtonComponent {
 
-  name: string = 'newwidget';
+  private name: string = 'newwidget';
 
-  now = new Date();
+  private now = new Date();
 
-  template = '<span class="simplebox">' +
-  'The current date and time is: <em>' + this.now.toString() + '</em>' +
-  '</span>';
+  private template = `<span>The current date and time is: <em>${this.now}</em></span>`;
 
   constructor() {
     super();
-    // can be made more beauty
+    this.widget.name = this.name;
     this.widget.template = this.template;
     this.widget.init = () => {
       // here will be modal window
-      window.alert('edit me');
+      window.alert(this.now);
     };
   }
 

@@ -1,5 +1,16 @@
 import { Component, Input, AfterContentInit } from '@angular/core';
 
+export class Widget {
+  name: string = 'basewidget';
+  label: string = `${this.name} label`;
+  template: string = `<div class="${this.name}">${this.name}</div>`;
+  init(): void { };
+  edit(): void { };
+  upcast(element: any): void {
+    return element.name === 'div' && element.hasClass(this.name);
+  };
+}
+
 declare var CKEDITOR: any;
 
 @Component({
@@ -10,50 +21,41 @@ export class BaseButtonComponent implements AfterContentInit {
 
   @Input() cke;
 
-  name: string = 'basewidget';
-
-  widget = {
-    template: `<div class="${this.name}">basewidget</div>`,
-    label: 'basewidget label',
-    upcast: function (element) {
-      return element.name == 'div' && element.hasClass(this.name);
-    },
-    init: () => { },
-    edit: () => { }
-  };
+  widget = new Widget();
 
   constructor() { }
 
 
-  ngAfterContentInit() {
-    this.createWidget();
-    this.cke.ready.subscribe(v => {
-      // console.info('instance ready', this.cke.instance);
-      CKEDITOR.plugins.registered[this.name].init(this.cke.instance);
+  ngAfterContentInit(): void {
+    this.createWidget(this.widget);
+    this.cke.ready.subscribe(() => {
+      CKEDITOR.plugins.registered[this.widget.name].init(this.cke.instance);
     });
   }
 
-  click(): void {
-    this.cke.instance.execCommand(this.name);
+  init(): void {
+    
   }
 
-  createWidget(): void {
-    let widgetname: string = this.name;
-    let widget = this.widget;
-    CKEDITOR.plugins.add(widgetname, {
+  click(): void {
+    this.cke.instance.execCommand(this.widget.name);
+  }
+
+  createWidget(widget: Widget): void {
+    CKEDITOR.plugins.add(widget.name, {
       requires: 'widget',
       init: function (editor) {
-        editor.widgets.add(widgetname, widget);
+        editor.widgets.add(widget.name, widget);
         if (editor.contextMenu) {
           editor.addMenuGroup('widgetGroup');
           editor.addMenuItem('widgetItem', {
             label: widget.label,
             //icon: this.path + 'icons/abbr.png',
-            //command: 'insertTimestamp',
+            command: widget.name,
             group: 'widgetGroup'
           });
           editor.contextMenu.addListener(element => {
-            if (element.hasClass('cke_widget_' + widgetname)) {
+            if (element.hasClass('cke_widget_' + widget.name)) {
               return { widgetItem: CKEDITOR.TRISTATE_OFF };
             }
           });
