@@ -113,6 +113,7 @@ export class CKEditorComponent implements AfterViewInit {
   /**
    * Implements ControlValueAccessor
    */
+  
   writeValue(value: string) {
     this._value = value;
     if (this.instance)
